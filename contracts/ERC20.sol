@@ -13,6 +13,7 @@ contract ERC20{
     constructor(string memory _name,string memory _symbol){
     name=_name;
     symbol=_symbol;
+    _mint(msg.sender,100e18);
     }
 
 
@@ -41,12 +42,19 @@ contract ERC20{
     }
 
     function _transfer(address sender,address recipient, uint256 amount)private returns(bool){
-        require(recipient==address(0),"ERC20: transfer to the zero address");
+        require(recipient!=address(0),"ERC20: transfer to the zero address");
         uint256 senderBalance=balanceOf[sender];
         require(senderBalance>=amount,"ERC20: transfer amount exceeds balance");
         balanceOf[sender]=senderBalance-amount;
         balanceOf[recipient] +=amount;
         return true;
+    }
+
+    function _mint(address to,uint256 amount) internal {
+        require(to!=address(0),"ERC20: mint to the zero address");
+
+        totalSupply+=amount;
+        balanceOf[to]+=amount;
     }
 
 
